@@ -1,0 +1,71 @@
+package demo;
+
+import java.lang.Number;
+
+rule "Start Game"
+	dialect "mvel"
+	salience 10
+	when
+		not (Move( )) 
+		not (Gameover( )) 
+	then
+		Move fact0 = new Move();
+		fact0.setPosition( 1 );
+		fact0.setValue( 2 );
+		fact0.setPlayer( "n" );
+		fact0.setValue2( 2 );
+		insert( fact0 );
+		Move fact1 = new Move();
+		fact1.setPosition( 2 );
+		fact1.setValue( 1 );
+		fact1.setPlayer( "n" );
+		fact1.setValue2( 1 );
+		insert( fact1 );
+		Move fact2 = new Move();
+		fact2.setPosition( 3 );
+		fact2.setValue( 2 );
+		fact2.setPlayer( "n" );
+		fact2.setValue2( 2 );
+		insert( fact2 );
+		Move fact3 = new Move();
+		fact3.setPosition( 4 );
+		fact3.setPlayer( "n" );
+		fact3.setValue( 1 );
+		fact3.setValue2( 1 );
+		insert( fact3 );
+		Move fact4 = new Move();
+		fact4.setPosition( 5 );
+		fact4.setPlayer( "n" );
+		fact4.setValue( 3 );
+		fact4.setValue2( 3 );
+		insert( fact4 );
+		Move fact5 = new Move();
+		fact5.setPosition( 6 );
+		fact5.setPlayer( "n" );
+		fact5.setValue( 1 );
+		fact5.setValue2( 1 );
+		insert( fact5 );
+		Move fact6 = new Move();
+		fact6.setPosition( 7 );
+		fact6.setPlayer( "n" );
+		fact6.setValue( 2 );
+		fact6.setValue2( 2 );
+		insert( fact6 );
+		Move fact7 = new Move();
+		fact7.setPosition( 8 );
+		fact7.setPlayer( "n" );
+		fact7.setValue( 1 );
+		fact7.setValue2( 1 );
+		insert( fact7 );
+		Move fact8 = new Move();
+		fact8.setPosition( 9 );
+		fact8.setPlayer( "n" );
+		fact8.setValue( 2 );
+		fact8.setValue2( 2 );
+		insert( fact8 );
+		Playerturn t = new Playerturn();
+		t.setTurn( "x" );
+		insert( t );
+		System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ");
+		System.out.println("Game started!  player starts:"+t.turn);
+end
