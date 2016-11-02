@@ -1,0 +1,196 @@
+package demo;
+import java.lang.Number;
+import java.util.ArrayList
+
+rule "ai make move"
+	dialect "mvel"
+	when
+		t : Playerturn( turn == "x" )
+		not (Gameover( )) 
+		m : Move( player == "n" )
+			not ( Move( value2 > m.value2 , player == "n" ) )
+	then
+		modify ( m ) { player = "x" };
+		System.out.println("AI making move: "+m.position + " value2 = " + m.value2 );
+		modify ( t   ) { turn     = "y" };
+		System.out.println("    set turn to: "+t.turn );
+end
+
+
+rule "player makes move"
+	dialect "mvel"
+	when
+		t : Playerturn( turn == "y" )  //it is player turn  
+		p : Playermove( position > 0)  //and.. requested play is a valid position
+		not (Gameover( )) 
+		m : Move( player == "n" , position == p.position) //and.. the move is available
+	then
+		modify ( m ) { player = "y" };  //make the play
+		System.out.println("Player making move: "+m.position );
+		modify ( t   ) { turn     = "x" }; //swap turns 
+		System.out.println("    set turn to: "+t.turn );
+		retract ( p )  //make sure it does not fire again!
+end
+
+// player try taken move.. 
+rule "player try taken move"
+	dialect "mvel"
+	when
+		t : Playerturn( turn == "y" )
+		p : Playermove( position > 0)
+		not (Gameover( )) 
+		m : Move( player != "n" , position == p.position)
+	then
+		retract ( p ) ;
+		System.out.println("Bad player move: "+m.position + " is already taken" );
+end
+
+
+rule "test col 1"
+	dialect "mvel"
+	salience 10
+	when
+		m : ArrayList( size == 2)
+		    from collect ( Move( player == "x" , p1 : position in ( 1, 4, 7 ) ) )
+		m3 : Move( player == "n" , p3 : position in ( 1, 4, 7 ) , value2 < 9 )
+	then
+		System.out.println( "Col 1 row matches!! "  );
+	    modify ( m3 ) { value2 = 9 };
+ 		System.out.println( "  pos="+m3.position+" new value2 = "+m3.value2  );
+
+end
+
+
+rule "test col 2"
+	dialect "mvel"
+	salience 10
+	when
+		m : ArrayList( size == 2)
+		    from collect ( Move( player == "x" , p1 : position in ( 2, 5, 8 ) ) )
+		m3 : Move( player == "n" , position in ( 2, 5, 8 ), value2 < 9 )
+	then
+		System.out.println( "Col 2 matches!! "  );
+		modify ( m3 ) { value2 = 9 };
+		System.out.println( "  move3="+m3.position  );
+end
+
+rule "test col 3"
+	dialect "mvel"
+	salience 10
+	when
+		m : ArrayList( size == 2)
+		    from collect ( Move( player == "x" , p1 : position in ( 3, 6, 9 ) ) )
+		m3 : Move( player == "n" , p3 : position in ( 3, 6, 9 ) , value2 < 9 )
+	then
+		System.out.println( "Col 3 matches!! "  );
+		modify ( m3 ) { value2 = 9 };
+		System.out.println( "  move="+m3.position  );
+end
+
+rule "test row 1"
+	dialect "mvel"
+	salience 10
+	when
+		m : ArrayList( size == 2)
+		    from collect ( Move( player == "x" , p1 : position in ( 1, 2, 3 ) ) )
+		m3 : Move( player == "n" , p3 : position in ( 1, 2, 3 ) , value2 < 9 )
+	then
+		System.out.println( "Row 1 row matches!! "  );
+	    modify ( m3 ) { value2 = 9 };
+ 		System.out.println( "  pos="+m3.position+" new value2 = "+m3.value2  );
+
+end
+
+rule "test row 2"
+	dialect "mvel"
+	salience 10
+	when
+		m : ArrayList( size == 2)
+		    from collect ( Move( player == "x" , p1 : position in ( 4, 5, 6 ) ) )
+		m3 : Move( player == "n" , position in ( 4, 5, 6 ), value2 < 9 )
+	then
+		System.out.println( "Row 2 matches!! "  );
+		modify ( m3 ) { value2 = 9 };
+		System.out.println( "  move3="+m3.position  );
+end
+
+rule "test row 3"
+	dialect "mvel"
+	salience 10
+	when
+		m : ArrayList( size == 2)
+		    from collect ( Move( player == "x" , p1 : position in ( 7, 8, 9 ) ) )
+		m3 : Move( player == "n" , p3 : position in ( 7, 8, 9 ) , value2 < 9 )
+	then
+		System.out.println( "Row 3 matches!! "  );
+		modify ( m3 ) { value2 = 9 };
+		System.out.println( "  move="+m3.position  );
+end
+
+rule "test angle right"
+	dialect "mvel"
+	salience 10
+	when
+		m : ArrayList( size == 2)
+		    from collect ( Move( player == "x" , p1 : position in ( 1, 5, 9 ) ) )
+		m3 : Move( player == "n" , position in ( 1, 5, 9 ), value2 < 9 )
+	then
+		System.out.println( "Angle right matches!! "  );
+		modify ( m3 ) { value2 = 9 };
+		System.out.println( "  move3="+m3.position  );
+end
+
+rule "test angle left"
+	dialect "mvel"
+	salience 10
+	when
+		m : ArrayList( size == 2)
+		    from collect ( Move( player == "x" , p1 : position in ( 3, 5, 7 ) ) )
+		m3 : Move( player == "n" , p3 : position in ( 3, 5, 7 ) , value2 < 9 )
+	then
+		System.out.println( "Angle left matches!! "  );
+		modify ( m3 ) { value2 = 9 };
+		System.out.println( "  move="+m3.position  );
+end
+
+
+//preventive moves agains player win..
+rule "prevent col 1"
+	dialect "mvel"
+	salience 9
+	when
+		m : ArrayList( size == 2)
+		    from collect ( Move( player == "y" , p1 : position in ( 1, 4, 7 ) ) )
+		m3 : Move( player == "n" , p3 : position in ( 1, 4, 7 ) , value2 < 8 )
+	then
+		System.out.println( "Col 1 warning!! "  );
+		modify ( m3 ) { value2 = 8 };
+		System.out.println( "  move="+m3.position  );
+end
+
+
+rule "prevent col 2"
+	dialect "mvel"
+	salience 9
+	when
+		m : ArrayList( size == 2)
+		    from collect ( Move( player == "y" , p1 : position in ( 2, 5, 8 ) ) )
+		m3 : Move( player == "n" , p3 : position in ( 2, 5, 8 ) , value2 < 8 )
+	then
+		System.out.println( "Col 1 warning!! "  );
+		modify ( m3 ) { value2 = 8 };
+		System.out.println( "  move="+m3.position  );
+end
+
+rule "prevent col 3"
+	dialect "mvel"
+	salience 9
+	when
+		m : ArrayList( size == 2)
+		    from collect ( Move( player == "y" , p1 : position in ( 3, 6, 9 ) ) )
+		m3 : Move( player == "n" , p3 : position in ( 3, 6, 9 ) , value2 < 8 )
+	then
+		System.out.println( "Col 3 warning!! "  );
+		modify ( m3 ) { value2 = 8 };
+		System.out.println( "  move="+m3.position  );
+end

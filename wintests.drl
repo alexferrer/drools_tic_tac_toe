@@ -1,0 +1,144 @@
+package demo;
+
+rule "test win h1"
+	dialect "mvel"
+	salience 5
+	when
+		m1 : Move( position == 1 , p1 : player != "n" )
+		m2 : Move( position == 2 , p2 : player)
+		m3 : Move( position == 3 , p3 : player)
+		eval( p1 == p2 )
+		eval( p1==p3 )
+	then
+		Gameover fact0 = new Gameover();
+		fact0.setOutcome( p1+ " wins" );
+		insert( fact0 );
+		System.out.println( p1 + " completes top row and wins the game !" );
+end
+
+rule "test win h2"
+	dialect "mvel"
+	salience 5
+	when
+		m1 : Move( position == 4 , p1 : player != "n" )
+		m2 : Move( position == 5 , p2 : player)
+		m3 : Move( position == 6 , p3 : player)
+		eval( p1 == p2 )
+		eval( p1==p3 )
+	then
+		Gameover fact0 = new Gameover();
+		fact0.setOutcome( p1+ " wins" );
+		insert( fact0 );
+		System.out.println( p1 + " completes bottom row and wins the game !" );
+end
+
+rule "test win h3"
+	dialect "mvel"
+	salience 5
+	when
+		m1 : Move( position == 7 , p1 : player != "n" )
+		m2 : Move( position == 8 , p2 : player)
+		m3 : Move( position == 9 , p3 : player)
+		eval( p1 == p2 )
+		eval( p1==p3 )
+	then
+		Gameover fact0 = new Gameover();
+		fact0.setOutcome( p1+ " wins" );
+		insert( fact0 );
+		System.out.println( p1 + " completes middle row and wins the game !" );
+end
+
+rule "test win left angle"
+	dialect "mvel"
+	salience 5
+	when
+		m1 : Move( position == 1 , p1 : player != "n" )
+		m2 : Move( position == 5 , p2 : player)
+		m3 : Move( position == 9 , p3 : player)
+		eval( p1 == p2 )
+		eval( p1==p3 )
+	then
+		Gameover fact0 = new Gameover();
+		fact0.setOutcome( p1+ " wins" );
+		insert( fact0 );
+		System.out.println( p1 + " completes top left to bottom right and wins the game !" );
+end
+
+rule "test win right angle"
+	dialect "mvel"
+	salience 5
+	when
+		m1 : Move( position == 3 , p1 : player != "n" )
+		m2 : Move( position == 5 , p2 : player)
+		m3 : Move( position == 7 , p3 : player)
+		eval( p1 == p2 )
+		eval( p1==p3 )
+	then
+		Gameover fact0 = new Gameover();
+		fact0.setOutcome( p1+ " wins" );
+		insert( fact0 );
+		System.out.println( p1 + " completes right top to left bottom and wins the game !" );
+end
+
+
+rule "test win v1"
+	dialect "mvel"
+	salience 5
+	when
+		m1 : Move( position == 1 , p1 : player != "n" )
+		m2 : Move( position == 4 , p2 : player)
+		m3 : Move( position == 7 , p3 : player)
+		eval( p1 == p2 )
+		eval( p1==p3 )
+	then
+		Gameover fact0 = new Gameover();
+		fact0.setOutcome( p1+ " wins" );
+		insert( fact0 );
+		System.out.println( p1 + " completes left col and wins the game !" );
+end
+
+rule "test win v2"
+	dialect "mvel"
+	salience 5
+	when
+		m1 : Move( position == 2 , p1 : player != "n" )
+		m2 : Move( position == 5 , p2 : player)
+		m3 : Move( position == 8 , p3 : player)
+		eval( p1 == p2 )
+		eval( p1==p3 )
+	then
+		Gameover fact0 = new Gameover();
+		fact0.setOutcome( p1+ " wins" );
+		insert( fact0 );
+		System.out.println( p1 + " completes middle col and wins the game !" );
+end
+
+rule "test win v3"
+	dialect "mvel"
+	salience 5
+	when
+		m1 : Move( position == 3 , p1 : player != "n" )
+		m2 : Move( position == 6 , p2 : player)
+		m3 : Move( position == 9 , p3 : player)
+		eval( p1 == p2 )
+		eval( p1==p3 )
+	then
+		Gameover fact0 = new Gameover();
+		fact0.setOutcome( p1+ " wins" );
+		insert( fact0 );
+		System.out.println( p1 + " completes right col and wins the game !" );
+end
+
+rule "test Tie"
+	dialect "mvel"
+	salience -1
+	when
+		not (Move( player == "n" )) 
+		Move( player == "x" )
+		not (Gameover( )) 
+	then
+		Gameover g = new Gameover();
+		g.setOutcome( "Game over ---  it is a tie!" );
+		insert( g );
+		System.out.println("game over, it is a tie!!! " )
+end
