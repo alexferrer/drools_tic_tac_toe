@@ -1,0 +1,15 @@
+package demo;
+
+import java.lang.Number;
+
+rule "list moves"
+	dialect "mvel"
+	salience -10
+	when
+		Gameover( )
+		m : Move( p : position)
+		not (Move( position < p )) 
+	then
+		System.out.println(m.position+","+m.player);
+		//retract ( m);
+end
